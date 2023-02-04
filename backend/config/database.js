@@ -13,6 +13,6 @@ const connectDatabase = () => {
     });
 };
 
-//Test
+//Testing
 
 module.exports = connectDatabase;
