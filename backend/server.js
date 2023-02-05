@@ -5,28 +5,24 @@ const dotenv = require("dotenv");
 
 //Connecting to Database
 connectDatabase();
+const app = express();
 
-// Handle the uncaught exections
-process.on("uncaughtException", (err) => {
-  console.log(`ERRORS: ${err.stack}`);
-  console.log(`Shutting down due to UnCaught Exception`);
-  process.exit(1);
-});
+app.use(express.json());
 
 // Setting up Config file
 dotenv.config({ path: "backend/config/config.env" });
 
-const server = app.listen(process.env.PORT, () => {
-  console.log(
-    `Server started on PORT: ${process.env.PORT} in ${process.env.NODE_ENV} mode`
-  );
+const __dirname = path.resolve();
+app.use(express.static(path.join(__dirname, "/frontend/build")));
+app.get("*", (req, res) =>
+  res.sendFile(path.join(__dirname, "/frontend/build/index.html"))
+);
+
+app.use((err, req, res, next) => {
+  res.status(500).send({ message: err.message });
 });
 
-// Handle "Unhandled Promise Rejection" error
-process.on("unhandledRejection", (err) => {
-  console.log(`ERRORS: ${err.stack}`);
-  console.log(`Shutting down the server due to unhandled promise rejection`);
-  server.close(() => {
-    process.exit(1);
-  });
+const port = process.env.PORT || 5000;
+app.listen(port, () => {
+  console.log(`serve at http://localhost:${port}`);
 });
