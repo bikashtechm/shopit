@@ -13,6 +13,6 @@ const connectDatabase = () => {
     });
 };
 
-//Testing ccccssssss
+//Testing ccccsssssss
 
 module.exports = connectDatabase;
