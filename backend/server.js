@@ -1,9 +1,6 @@
 const app = require("./app");
-<<<<<<< HEAD
 var http = require("http");
 
-=======
->>>>>>> dbfcfe56a034e51161d44960c9ecc63eefd2d781
 const connectDatabase = require("./config/database");
 
 const dotenv = require("dotenv");
