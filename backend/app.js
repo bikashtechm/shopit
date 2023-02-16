@@ -2,6 +2,9 @@ const express = require("express");
 const path = require("path");
 
 const app = express();
+
+const cookieParser = require("cookie-parser");
+
 const cors = require("cors");
 
 if (process.env.NODE_ENV === "PRODUCTION") {
@@ -14,6 +17,7 @@ if (process.env.NODE_ENV === "PRODUCTION") {
 const errorMiddleware = require("./middlewares/errors");
 app.use(cors());
 app.use(express.json());
+app.use(cookieParser());
 
 // Imports All Routes
 const products = require("./routes/product");

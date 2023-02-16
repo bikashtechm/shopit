@@ -22,7 +22,7 @@ exports.registerUser = catchAsyncErrors(async (req, res, next) => {
   sendToken(user, 200, res);
 });
 
-// Login User  =>  /a[i/v1/login
+// Login User  =>  /api/v1/login
 exports.loginUser = catchAsyncErrors(async (req, res, next) => {
   const { email, password } = req.body;
 
