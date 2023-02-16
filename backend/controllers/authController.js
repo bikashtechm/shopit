@@ -2,8 +2,8 @@ const User = require("../models/user");
 
 const ErrorHandler = require("../utils/errorHandler");
 
-const catchAsyncError = require("../middlewares/catchAsyncErrors");
 const catchAsyncErrors = require("../middlewares/catchAsyncErrors");
+const sendToken = require("../utils/jwtToken");
 
 // Register a user  ==> /api/v1/register
 exports.registerUser = catchAsyncErrors(async (req, res, next) => {
@@ -19,39 +19,31 @@ exports.registerUser = catchAsyncErrors(async (req, res, next) => {
     },
   });
 
-  const token = user.getJwtToken();
-
-  res.status(201).json({
-    success: true,
-    token,
-  });
+  sendToken(user, 200, res);
 });
 
-// Login User ==> /api/v1/login
+// Login User  =>  /a[i/v1/login
 exports.loginUser = catchAsyncErrors(async (req, res, next) => {
   const { email, password } = req.body;
 
-  // Check if email and password is entered by User
+  // Checks if email and password is entered by user
   if (!email || !password) {
-    return next(new ErrorHandler("Please enter email and password", 400));
+    return next(new ErrorHandler("Please enter email & password", 400));
   }
 
-  // Finding user in Database
+  // Finding user in database
   const user = await User.findOne({ email }).select("+password");
 
   if (!user) {
-    return next(new ErrorHandler("Invalid Email or Password Entered", 401));
+    return next(new ErrorHandler("Invalid Email or Password", 401));
   }
 
-  // Check if Password is correct or Not
-  const isPasswordMatched = await User.comparePassword(password);
+  // Checks if password is correct or not
+  const isPasswordMatched = await user.comparePassword(password);
+
   if (!isPasswordMatched) {
-    return next(new ErrorHandler("Invalid Email or Password Entered", 401));
+    return next(new ErrorHandler("Invalid Email or Password", 401));
   }
 
-  const token = user.getJwtToken();
-  res.status(200).json({
-    success: true,
-    token,
-  });
+  sendToken(user, 200, res);
 });
